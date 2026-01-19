@@ -153,7 +153,12 @@ void MainWindow::onHistoryDataReceived(QNetworkReply *reply) {
             }
 
             if (dt.isValid()) {
-                dt.setTimeZone(QTimeZone::UTC);
+                #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+                    dt.setTimeSpec(Qt::UTC);
+                #else
+                    dt.setTimeZone(QTimeZone::UTC);
+                #endif
+
                 QDateTime localDt = dt.toLocalTime();
                 
                 points.append(QPointF(localDt.toMSecsSinceEpoch(), temp));
